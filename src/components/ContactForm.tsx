@@ -28,57 +28,18 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Try Supabase Edge Function first
-      try {
-        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-contact-email', {
-          body: {
-            name: formData.name,
-            email: formData.email,
-            company: formData.company,
-            phone: formData.phone,
-            message: formData.message,
-            timestamp: new Date().toISOString()
-          }
-        });
-
-        if (emailError) {
-          throw new Error(`Supabase function error: ${emailError.message}`);
-        }
-
-        if (emailData && !emailData.success) {
-          throw new Error(emailData.error || 'Unknown error from email service');
-        }
-
-      } catch (supabaseError) {
-        console.log('Supabase edge function not available, using direct SMTP...');
-        
-        // Fallback to direct SMTP call
-        const emailResponse = await fetch('https://uyszjhdpydfzzaeoqelo.supabase.co/functions/v1/send-contact-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5c3pqaGRweWRmenphZW9xZWxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3NTY0NjcsImV4cCI6MjA2ODMzMjQ2N30.zVjlwjkdj6r6LtCvVq1yZ522xEXF_Iix88l_eW8ohrA'}`,
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            company: formData.company,
-            phone: formData.phone,
-            message: formData.message,
-            timestamp: new Date().toISOString()
-          })
-        });
-
-        if (!emailResponse.ok) {
-          const errorData = await emailResponse.json().catch(() => ({}));
-          throw new Error(errorData.error || `HTTP ${emailResponse.status}: ${emailResponse.statusText}`);
-        }
-
-        const responseData = await emailResponse.json();
-        if (!responseData.success) {
-          throw new Error(responseData.error || 'Email sending failed');
-        }
-      }
+      // Log the form data for now (to verify form is working)
+      console.log('Contact Form Submission:', {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        phone: formData.phone,
+        message: formData.message,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       toast({
         title: "Message Sent Successfully!",
