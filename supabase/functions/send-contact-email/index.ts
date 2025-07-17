@@ -33,17 +33,21 @@ Please respond to this inquiry promptly.
 C4Verse Contact System
     `
 
-    // Get SMTP credentials from Supabase secrets
-    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
-    const smtpPort = Deno.env.get('SMTP_PORT') || '587'
-    const smtpUser = Deno.env.get('SMTP_USER') // Your email
-    const smtpPass = Deno.env.get('SMTP_PASS') // Your app password
-    const smtpFrom = Deno.env.get('SMTP_FROM') || smtpUser
-    const smtpTo = Deno.env.get('SMTP_TO') || 'contact@c4verse.com'
+    // Use your provided SMTP credentials
+    const smtpHost = 'mail.c4verse.com'
+    const smtpPort = '465'
+    const smtpUser = 'contact@c4verse.com'
+    const smtpPass = '#Contact@c4verse.com@2025'
+    const smtpFrom = 'contact@c4verse.com'
+    const smtpTo = 'contact@c4verse.com'
 
-    if (!smtpUser || !smtpPass) {
-      throw new Error('SMTP credentials not configured in secrets')
-    }
+    console.log('SMTP Configuration:', {
+      host: smtpHost,
+      port: smtpPort,
+      user: smtpUser,
+      from: smtpFrom,
+      to: smtpTo
+    });
 
     // Send email using a simple SMTP approach
     const emailPayload = {
