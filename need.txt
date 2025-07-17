@@ -1,0 +1,4 @@
+OPENROUTER_KEY= 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
+QDRANT_URL= https://997aa707-477f-46d7-b719-bbac163ed1fd.us-east4-0.gcp.cloud.qdrant.io
+QDRANT_API_KEY= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.KNCtqLZ5ucesIpaPsjKaQ736dYXD8E8apG4r0Opkeog
+CALENDAR_ID= itslobo55x@gmail.com

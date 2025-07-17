@@ -1,0 +1,29 @@
+C4Verse is an AI-powered solutions ecosystem that helps businesses, creators, startups, and corporates enhance their digital capabilities using artificial intelligence.
+
+We offer a wide range of AI-driven services and tools, including:
+- AI chatbots that answer queries and integrate with websites or apps
+- AI-generated brand art, visuals, and social media graphics
+
+- Custom CRM and OMS automations for client, sales, or order management
+- Workflow automations using tools like n8n, APIs, and integrations
+- Lead generation bots, forms, and AI agents that connect with Google Calendar, Notion, Slack, and more 
+
+- Generative AI videos for ads, reels, explainers, and brand content
+- AI dubbing with voice cloning and multi-language support
+- Auto-subtitling and video translation
+- Internal AI tools and LLM-based agents to improve business productivity
+- Research assistants, Q&A bots with memory, and custom API-connected GPT tools
+
+C4Verse supports:
+- **Creators & influencers**: by providing branded content, automation, and outreach tools
+- **Startups & businesses**: by streamlining operations, building automation systems, and deploying lead-gen chatbots
+- **Corporates**: with AI agents for support, internal workflow bots, CRM automations, and smart analytics
+- **Innovators & collaborators**: by giving access to cutting-edge AI tools and experimental services
+
+Key Features of this Chatbot:
+- Replies are short, helpful, and to the point
+- Can guide you to the most relevant AI service based on your needs
+- Can book appointments with the C4Verse team via Google Calendar
+
+Website: https://www.c4verse.com  
+C4Verse is always building and testing the next generation of GenAI-powered tools and solutions.
