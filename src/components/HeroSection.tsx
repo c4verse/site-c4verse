@@ -7,49 +7,54 @@ const HeroSection = () => {
   const [scrollY, setScrollY] = useState(0);
   const [show3D, setShow3D] = useState(true);
   
-  // Typewriter effect state
+  // Simplified typewriter effect state
   const words = ['Creators', 'Brands', 'Startups', 'Businesses', 'Innovators', 'Entrepreneurs'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
-  // const [isPaused, setIsPaused] = useState(false); // REMOVE
 
-  // Typewriter effect
+  // Simplified typewriter effect with proper cleanup
   useEffect(() => {
-    const currentWord = words[currentWordIndex];
     let timeout: NodeJS.Timeout;
-    if (!isDeleting) {
-      if (currentText.length < currentWord.length) {
-        timeout = setTimeout(() => {
+    
+    const typeEffect = () => {
+      const currentWord = words[currentWordIndex];
+      
+      if (!isDeleting) {
+        if (currentText.length < currentWord.length) {
           setCurrentText(currentWord.substring(0, currentText.length + 1));
-        }, 100);
+          timeout = setTimeout(typeEffect, 100);
+        } else {
+          timeout = setTimeout(() => setIsDeleting(true), 1600);
+        }
       } else {
-        timeout = setTimeout(() => {
-          setIsDeleting(true);
-        }, 1600); // Pause after word is fully typed
-      }
-    } else {
-      if (currentText.length > 0) {
-        timeout = setTimeout(() => {
+        if (currentText.length > 0) {
           setCurrentText(currentWord.substring(0, currentText.length - 1));
-        }, 50);
-      } else {
-        setIsDeleting(false);
-        setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+          timeout = setTimeout(typeEffect, 50);
+        } else {
+          setIsDeleting(false);
+          setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+        }
       }
-    }
-    return () => clearTimeout(timeout);
+    };
+
+    timeout = setTimeout(typeEffect, 100);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
   }, [currentText, isDeleting, currentWordIndex, words]);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      // Hide 3D elements when scrolling past 200px
       setShow3D(currentScrollY < 200);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
