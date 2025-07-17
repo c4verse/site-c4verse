@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Mail, User, MessageSquare, Send, Phone, Building } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import emailjs from '@emailjs/browser';
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -28,19 +28,27 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Log the form data for now (to verify form is working)
-      console.log('Contact Form Submission:', {
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        phone: formData.phone,
+      // Create email template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        company: formData.company || 'Not provided',
+        phone: formData.phone || 'Not provided',
         message: formData.message,
-        timestamp: new Date().toISOString()
-      });
-      
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 1000));
+        to_email: 'contact@c4verse.com',
+        timestamp: new Date().toLocaleString()
+      };
 
+      // Send email using EmailJS
+      const result = await emailjs.send(
+        'service_c4verse', // You'll need to create this service in EmailJS
+        'template_contact', // You'll need to create this template
+        templateParams,
+        'c4verse_public_key' // You'll need to get this from EmailJS
+      );
+
+      console.log('Email sent successfully:', result);
+      
       toast({
         title: "Message Sent Successfully!",
         description: "Thank you for reaching out! We'll get back to you within 24 hours.",
@@ -57,11 +65,48 @@ const ContactForm = () => {
 
     } catch (error) {
       console.error('Contact form error:', error);
-      toast({
-        title: "Submission Failed",
-        description: "There was an error sending your message. Please try again or email us directly at contact@c4verse.com",
-        variant: "destructive",
-      });
+      
+      // Try fallback method - direct fetch to your SMTP endpoint
+      try {
+        const fallbackResponse = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            company: formData.company,
+            phone: formData.phone,
+            message: formData.message,
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        if (fallbackResponse.ok) {
+          toast({
+            title: "Message Sent Successfully!",
+            description: "Thank you for reaching out! We'll get back to you within 24 hours.",
+          });
+          
+          // Reset form
+          setFormData({
+            name: '',
+            email: '',
+            company: '',
+            phone: '',
+            message: ''
+          });
+        } else {
+          throw new Error('Fallback method failed');
+        }
+      } catch (fallbackError) {
+        toast({
+          title: "Submission Failed",
+          description: "There was an error sending your message. Please try again or email us directly at contact@c4verse.com",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
