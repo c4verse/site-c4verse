@@ -13,7 +13,7 @@ const Header = () => {
   const isContactPage = location.pathname === '/contact';
 
   // Handler for Services link: navigates to / and scrolls to #services
-  const handleServicesClick = (e) => {
+  const handleServicesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     navigate('/');
     setTimeout(() => {
