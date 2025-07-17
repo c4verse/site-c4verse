@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ContactHero from '../components/ContactHero';
 import ContactFormSection from '../components/ContactFormSection';
+import { Toaster } from '@/components/ui/toaster';
 
 const Contact = () => {
   useEffect(() => {
@@ -40,6 +41,7 @@ const Contact = () => {
         <ContactFormSection />
       </main>
       <Footer />
+      <Toaster />
     </div>
   );
 };

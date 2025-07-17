@@ -1,8 +1,11 @@
 
 import React, { useState } from 'react';
 import { Mail, User, MessageSquare, Send, Phone, Building } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const ContactForm = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,21 +27,47 @@ const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      phone: '',
-      message: ''
-    });
-    setIsSubmitting(false);
-    
-    // Show success message (you can implement a toast here)
-    alert('Thank you! We\'ll get back to you within 24 hours.');
+    try {
+      // Send email via Supabase Edge Function
+      const { data: emailData, error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          phone: formData.phone,
+          message: formData.message,
+          timestamp: new Date().toISOString()
+        }
+      });
+
+      if (emailError) {
+        throw new Error(`Email sending failed: ${emailError.message}`);
+      }
+
+      toast({
+        title: "Message Sent Successfully!",
+        description: "Thank you for reaching out! We'll get back to you within 24 hours.",
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        message: ''
+      });
+
+    } catch (error) {
+      console.error('Contact form error:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error sending your message. Please try again or email us directly at contact@c4verse.com",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputClasses = "w-full pl-12 pr-4 py-4 border-2 border-border rounded-xl focus:border-c4-primary focus:ring-4 focus:ring-c4-primary/10 transition-all duration-300 font-roboto text-foreground placeholder-muted-foreground bg-background hover:border-c4-accent";
